@@ -1,0 +1,121 @@
+create table livros(
+id_livro int not null,
+nome_livro varchar(100) not null,
+autoria varchar(50) not null,
+editora varchar(50) not null,
+categoria varchar(20) not null,
+preco decimal(5,2) not null,
+
+primary key(id_livro)
+);
+insert into livros 
+values
+(2,'A volta ao mundo em 80 dias','julio verne','principis','aventura',21.99),
+(3,'o cortiço','aluisio de azevedo','panda books','romance',47.80),
+(4,'dom casmurro','machado de assis','via leitura','romace',19.90),
+(5,'memorias postumas de bras cubas','machado de assis','antofagica','romace',45.90),
+(6,'quincas borba','machado de assis','l&m editores','romace',48.50),
+(7,'icaro','gabriel pedrosa','atelie','poesia',36.00),
+(8,'os lusiadas','luiz vaz de camoes','monte cristo','poesia',18.79),
+(9,'outros jeitos de usar a boca','rupi kaur','planeta','poesia',34.80),
+(11,'eu sou malala','malala yousafzai','compainha de letras','biografia',22.32),
+(12,'minha historia','michelle obama','objetica','biografia',57.90),
+(13,'diario de anne frank','anne frank','pe da letra','biografia',34.90);
+/*select * from livros;*/
+
+create table estoque(
+id_livro int not null,
+qtd_livro int not null,
+
+primary key(id_livro)
+);
+insert into estoque
+values (1,7),
+(2,10),
+(3,2),
+(8,4),
+(9,5),
+(11,3),
+(12,3);
+select * from estoque;
+create table vendas(
+id_pedido int not null,
+id_vendedor int not null,
+id_livro int not null,
+qtd_vendida int not null,
+data_venda date not null,
+PRIMARY KEY (id_vendedor,id_pedido)
+);
+insert into vendas
+values(1,3,7,1,'2020-11-02'),
+(2,4,8,2,'2020-11-02'),
+(3,4,4,3,'2020-11-02'),
+(4,1,7,1,'2020-11-03'),
+(5,1,6,3,'2020-11-03'),
+(6,1,9,2,'2020-11-04'),
+(7,4,1,3,'2020-11-04'),
+(8,1,5,2,'2020-11-05'),
+(9,1,2,1,'2020-11-05'),
+(10,3,8,2,'2020-11-11'),
+(11,1,1,4,'2020-11-11'),
+(12,2,9,1,'2020-11-03'),
+(13,1,12,5,'2020-11-25'),
+(14,2,4,1,'2020-11-25'),
+(15,3,13,2,'2020-11-03'),
+(16,4,13,3,'2020-11-03'),
+(17,4,4,3,'2020-11-03'),
+(18,4,2,2,'2020-12-03');
+select * from vendas;
+create table vendedores(
+ID_VENDEDOR INT NOT NULL,
+NOME_VENDEDOR VARCHAR(255) NOT NULL,
+PRIMARY KEY (ID_VENDEDOR)
+);
+insert into vendedores
+values(1,'Paula Rabelo'),
+(2,'Juliana Macedo'),
+(3,'Roberto Barros'),
+(4,'Barbara Jales');
+select * from vendedores;
+
+update livros
+set nome_livro = 'desenvolvimento back-end'
+where id_livro = 2;
+select * from livros;
+delete from livros
+where id_livro = 2;
+select * from livros;
+
+/*select nome_livros,preco from livros
+where categoria = 'romance' and autoria = 'machado de assis';
+update livros
+set preco_livros = preco_livros*0.9;
+select * from livros;
+*/
+#consultar a quantidade de livros vendidos
+select vendas.id_livro,livros.nome_livro,sum(vendas.qtd_vendida)
+from vendas,livros
+where vendas.id_livro = livros.id_livro
+group by vendas.id_livros;
+
+select count(id_livro) from livros;
+select MAX(preco) from livros;
+select min(preco) from livros;
+select sum(preco) from livros;
+#o codigo do vendendor, nome do vendedor e quanto cada vendeu
+#select vendedores.ID_VENDEDOR,vendedores.NOME_VENDEDOR 
+#from vendedores;
+select vendas.id_vendedor,vendedores.NOME_VENDEDOR,sum(vendas.qtd_vendida)
+from vendas,vendedores
+where vendas.id_vendedor = vendedores.ID_VENDEDOR
+group by vendas.id_vendedor;
+#o codigo do vendendor, nome do vendedor, nome do livro,quanto cada um vendeu
+select vendas.id_vendedor,vendedores.NOME_VENDEDOR,livros.nome_livro,sum(vendas.qtd_vendida)
+from vendas,vendedores,livros
+where vendas.id_vendedor = vendedores.ID_VENDEDOR and vendas.id_livro = livros.id_livro
+group by vendas.id_vendedor,vendas.id_livro;
+#o codigo do vendendor, nome do vendedor,valor total das vendas e comissao
+select vendas.id_vendedor,vendedores.NOME_VENDEDOR,sum(vendas.qtd_vendida)
+from vendas,vendedores,livros
+where vendas.id_vendedor = vendedores.ID_VENDEDOR
+group by vendas.id_vendedor;
